@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>websocket-java-socketIo-8081</title>
+    <script src="https://cdn.bootcss.com/socket.io/2.2.0/socket.io.js"></script>
+</head>
+
+<body>
+<h1>Socket.io Test</h1>
+
+<p id="address" style="display: none" th:text="${address}"></p>
+
+<div id="status">
+    <p>状态</p>
+</div>
+
+<div id="message">
+    <p>消息</p>
+</div>
+
+<div>
+    <p>内容</p>
+    <label>
+        <input id="input" type="text"/>
+    </label>
+</div>
+<div>
+    <p>接收人</p>
+    <label>
+        <input id="to" type="text"/>
+    </label>
+</div>
+
+
+<br><br>
+
+<button id="connect" onClick='connect()'>连接</button>
+<button id="disconnect" onClick='disconnect()'>断开</button>
+<button id="send" onClick='send()'>发送消息</button>
+</body>
+
+<script type="text/javascript">
+
+  let socket = io.connect(document.getElementById('address').innerHTML);
+  let firstconnect = true;
+
+  //监听服务器连接事件
+  socket.on('connect', function () {
+    status_update("连接成功");
+  });
+
+  socket.on('reconnect', function () {
+    status_update("重新连接成功");
+  });
+
+  //监听服务器关闭服务事件
+  socket.on('disconnect', function () {
+    firstconnect = false;
+    status_update("断开连接");
+  });
+
+  socket.on('connect_error', function (error) {
+    console.log(error);
+  });
+
+  //监听服务器端发送消息事件
+  socket.on('messageevent', function (data) {
+    message(data)
+    //console.log("服务器发送的消息是："+data);
+  });
+
+
+  function message(data) {
+    document.getElementById('message').innerHTML = document.getElementById('message').innerHTML
+      + "<p>" + "收到服务端消息: " + data + "</p>";
+  }
+
+  function getDate() {
+    let myDate = new Date();
+    let y = myDate.getFullYear();    //获取完整的年份(4位,1970-????)
+    let m = myDate.getMonth() + 1;       //获取当前月份(0-11,0代表1月)
+    let d = myDate.getDate();        //获取当前日(1-31)
+    let t = myDate.getTime();        //获取当前时间(从1970.1.1开始的毫秒数)
+    let h = myDate.getHours();       //获取当前小时数(0-23)
+    let min = myDate.getMinutes();     //获取当前分钟数(0-59)
+    let s = myDate.getSeconds();     //获取当前秒数(0-59)
+    let ms = myDate.getMilliseconds();    //获取当前毫秒数(0-999)
+    if (m >= 1 && m <= 9) {
+      m = "0" + m;
+    }
+    if (d >= 0 && d <= 9) {
+      d = "0" + d;
+    }
+    if (h >= 0 && h <= 9) {
+      h = "0" + h;
+    }
+    if (min >= 0 && min <= 9) {
+      min = "0" + min;
+    }
+    if (s >= 0 && s <= 9) {
+      s = "0" + s;
+    }
+    let fh = '-';
+    let fh2 = ':'
+    return y + fh + m + fh + d + ' ' + h + fh2 + min + fh2 + s + fh2 + ms;//当前时间
+  }
+
+
+  function status_update(txt) {
+    document.getElementById('status').innerHTML = document.getElementById('status').innerHTML
+      + "<p>" + txt + "  --  " + new Date() + "</p>";
+  }
+
+  function esc(msg) {
+    return msg.replace(/</g, '<').replace(/>/g, '>');
+  }
+
+  //点击发送消息触发
+  function send() {
+    socket.emit('sendEvent', {
+      content: document.getElementById('input').value,
+      from: document.getElementById('address').innerHTML.split("?mac=")[1],
+      to: document.getElementById('to').value
+    });
+    document.getElementById('input').value = ''
+  }
+
+  //断开连接
+  function disconnect() {
+    console.log("发起断开连接请求")
+    socket.disconnect();
+  }
+
+  function connect() {
+    socket.connect();
+  }
+
+</script>
+</html>

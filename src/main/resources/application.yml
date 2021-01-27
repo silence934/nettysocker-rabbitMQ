@@ -1,0 +1,21 @@
+spring:
+  servlet:
+    multipart.max-file-size: 1000MB
+    multipart.max-request-size: 1000MB
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    redisson:
+      file: classpath:redisson-config.yml
+  rabbitmq:
+    port: 5672
+    host: 127.0.0.1
+    username: guest
+    password: guest
+    connection-timeout: 15000
+
+
+
+server:
+  port: 8080
+  address: 127.0.0.1

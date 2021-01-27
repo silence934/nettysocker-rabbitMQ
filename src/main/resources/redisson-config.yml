@@ -1,0 +1,18 @@
+singleServerConfig:
+  idleConnectionTimeout: 10000
+  connectTimeout: 1000
+  timeout: 1000
+  retryAttempts: 1
+  retryInterval: 200
+  password: null
+  subscriptionsPerConnection: 5
+  clientName: null
+  address: "redis://127.0.0.1:6379"
+  subscriptionConnectionMinimumIdleSize: 1
+  subscriptionConnectionPoolSize: 25
+  connectionMinimumIdleSize: 5
+  connectionPoolSize: 100
+  keepAlive: true
+  database: 15
+threads: 8
+#codec: !<org.redisson.codec.JsonJacksonCodec> {}
