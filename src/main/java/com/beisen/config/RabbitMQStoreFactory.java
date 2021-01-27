@@ -34,6 +34,7 @@ public class RabbitMQStoreFactory extends BaseStoreFactory {
 
     @Override
     public void init(NamespacesHub namespacesHub, AuthorizeHandler authorizeHandler, JsonSupport jsonSupport) {
+        //只对 DISPATCH 消息进行集群共享
         pubSubStore.subscribe(PubSubType.DISPATCH,
                 data -> {
                     Packet packet = data.getPacket();

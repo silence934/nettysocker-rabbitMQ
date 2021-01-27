@@ -14,8 +14,6 @@ spring:
     password: guest
     connection-timeout: 15000
 
-
-
 server:
   port: 8080
   address: 127.0.0.1
